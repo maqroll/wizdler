@@ -82,11 +82,13 @@ Wsdl.format = {
 
 Wsdl._generateSoapMessage = function(ctx, soapVersion) {
 	var ns = Wsdl.ns[soapVersion + 'Env'];
-	var doc = document.implementation.createDocument(ns, 'Envelope', null);
+	var doc = document.implementation.createDocument(ns, 's:Envelope', null);
+	doc.appendChild(doc.createComment(ctx.wsdl.url));
+	doc.appendChild(doc.createComment('operacion:' + ctx.operation.name.local));
 	// SOAP headers
 	var headers = ctx.operation.input[soapVersion].headers;
 	if (headers.length) {
-		var hdr = doc.createElementNS(ns, 'Header');
+		var hdr = doc.createElementNS(ns, 's:Header');
 		doc.documentElement.appendChild(hdr);
 		for (var i = 0, n = headers.length; i < n; ++i) {
 			var message = ctx.wsdl.messages[headers[i].message.full];
@@ -97,7 +99,7 @@ Wsdl._generateSoapMessage = function(ctx, soapVersion) {
 
 	// SOAP body
 	var message = ctx.wsdl.messages[ctx.portTypeOperation.input.full];
-	var bodyEl = doc.createElementNS(ns, 'Body');
+	var bodyEl = doc.createElementNS(ns, 's:Body');
 	doc.documentElement.appendChild(bodyEl);
 	var body = ctx.operation.input[soapVersion].body;
 	if (ctx.operation[soapVersion].style == 'rpc') {

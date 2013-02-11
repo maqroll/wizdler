@@ -52,7 +52,7 @@ XmlSampleGenerator.prototype = {
 			throw new Error('Schema did not lead to generation of a valid XML document.');
 		this.instanceElementsProcessed = new Object;
 		this.instanceElementsProcessed[root] = root;
-		var doc = document.implementation.createDocument(root.qname.ns, root.qname.localName, null);
+		var doc = document.implementation.createDocument(root.qname.ns, 'ws:' + root.qname.localName, null);
 		//this.processElementAttrs(doc.documentElement, root);
 		//this.processComment(doc.documentElement, root);
 		//this.checkIfMixed(doc.documentElement, root);
@@ -96,7 +96,10 @@ XmlSampleGenerator.prototype = {
 		this.instanceElementsProcessed[elem] = elem;
 		var doc = parentEl.ownerDocument;
 		for (var i = 0, n = elem.occurs; i < n; ++i) {
-			var el = doc.createElementNS(elem.qname.ns, elem.qname.localName);
+			// TODO no hay que añadirsela siempre
+			// si el targetNamespace coincide con el del padre entonces no lo incluimos
+			//var el = doc.createElementNS(elem.qname.ns, elem.qname.localName);
+			var el = doc.createElementNS(null, elem.qname.localName);
 			//this.processElementAttrs(el, elem);
 			//this.processComment(el, elem);
 			//this.checkIfMixed(el, elem);
